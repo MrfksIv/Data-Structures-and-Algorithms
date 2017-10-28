@@ -164,10 +164,10 @@ class JobQueue:
             self.siftDown(i)
 
     def solve(self):
-        # self.read_data()
+        self.read_data()
         
-        self.num_workers = 2
-        self.jobs = [1,2,3,4,5]
+        # self.num_workers = 2
+        # self.jobs = [1,2,3,4,5]
         # self.jobs = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
         # self.jobs = [5,9,8,4,2,7]
         # self.jobs = [3,2,3,6,2,8,3,3]
@@ -198,15 +198,14 @@ class JobQueue:
         # self.jobs = [2,7,1,6,9]
 
         
-        self.num_workers = min(self.num_workers, len(self.jobs))
-        self.nextJobIndex = self.num_workers
-        self.heapSize = self.num_workers
+        # self.num_workers = min(self.num_workers, len(self.jobs))
+        #self.nextJobIndex = self.num_workers
+        # self.heapSize = self.num_workers
 
-        for i in range(self.num_workers):
-            self.currentJobs.append((i, self.jobs[i]))
-            self.jobsHistory.append((i, 0))
-            self.next_free_time.append(self.jobs[i])
-        # assert m == len(self.jobs)
+        # for i in range(self.num_workers):
+        #     self.currentJobs.append((i, self.jobs[i]))
+        #     self.jobsHistory.append((i, 0))
+        #     self.next_free_time.append(self.jobs[i])
         self.assign_jobs()
         self.write_response()
 
