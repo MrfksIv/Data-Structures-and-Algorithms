@@ -166,7 +166,7 @@ class JobQueue:
     def solve(self):
         # self.read_data()
         
-        self.num_workers = 7
+        self.num_workers = 8
         # self.jobs = [1,2,3,4,5]
         # self.jobs = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
         # self.jobs = [5,9,8,4,2,7]
@@ -185,8 +185,18 @@ class JobQueue:
         # self.jobs = [4,5,4,4,4,1,9,1]
         # self.jobs = [9]
         # self.jobs = [7,9,8,1]
-        self.jobs = [1,3,2,9,4,6,2,1,2]
-        # self.jobs = [1 3 2 9 4 6 2 1 2]
+        # self.jobs = [1,3,2,9,4,6,2,1,2]
+        # self.jobs = [1]
+        # self.jobs = [7,1,1,6,1,8,1,3,2]
+        # self.jobs = [6,5,2,8,7,2]
+        # self.jobs = [8,8,6,3,7,5,9,8,6]
+        # self.jobs = [8,5,8,1,6]
+        # self.jobs = [2,3,2,6]
+        # self.jobs = [9,7,1,9,2]
+        # self.jobs = [4,9,2,8,9,5,4,1]
+        # self.jobs = [2,3,1,4,5,9,8,1,9]
+        self.jobs = [2,7,1,6,9]
+
         
         self.num_workers = min(self.num_workers, len(self.jobs))
         self.nextJobIndex = self.num_workers
