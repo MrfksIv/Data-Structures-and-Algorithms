@@ -23,7 +23,7 @@ class JobQueue:
         # print("afsasfasfafs: {}".format(self.next_free_time))
 
     def write_response(self):
-        for i in range(len(self.jobsHistory)):
+        for i in range(len(self.jobs)):
           print(self.jobsHistory[i][0], self.jobsHistory[i][1]) 
 
     def assign_jobs(self):
@@ -34,84 +34,72 @@ class JobQueue:
         self.start_times = [None] * len(self.jobs)
         # self.next_free_time = [0] * self.num_workers
 
-        # print("before: {}".format(self.currentJobs))
+        print("before: {}".format(self.currentJobs))
         self.buildHeap()
-        # print("after: {}".format(self.currentJobs))
+        print("after: {}".format(self.currentJobs))
         next_free_thread = []
-        jobDone = []
         
         currentTime = 0
         while self.heapSize > 0 and self.nextJobIndex < len(self.jobs):
+            shouldbeAdded = True
+            next_free_thread = []
             print("initial jobs: {}".format(self.currentJobs))
-            last = self.extractMin()
-            tmpHistory = []
-            if last != None:
-                currentTime = last[1]
-                jobDone.append(last)
- 
-                # print("job finished: {} @ {}".format(jobDone, currentTime) )
-                print("jobs remaining: {}, total: {}".format(self.currentJobs, self.heapSize))
-                
-                # print("next job done: {} /// heapSize: {}".format(jobDone, self.heapSize))
-                tmpHistory.append(last)
-                next_free_thread.append(last[0])
-                prev = self.next_free_time[last[0]]
-                self.next_free_time[last[0]] = last[1]
-                print("thread {} finished at: {}".format(last[0], last[1]))
-                print("next one is thread {} which finishes at: {}".format(self.currentJobs[0][0], self.next_free_time[self.currentJobs[0][0]] + self.currentJobs[0][0] ))
-      
-                j = 0
-                
-                while  last[1] == self.next_free_time[self.currentJobs[0][0]] + self.currentJobs[0][0] and self.heapSize > 0:
-                    last2 = self.extractMin()
-                    if last2 != None:
-                        jobDone.append(last)
-                        print("Found job that will finish concurrently: {}".format(last2))
-                        # print("job finished: {}".format(jobDone[len(jobDone)-1]))
-                        print("jobs remaining: {}, jobs pending:{}".format(self.currentJobs, self.nextJobIndex))
-                        # print("next job done: {} /// heapSize: {}".format(jobDone[len(jobDone)-1], self.heapSize))
-                        tmpHistory.append(last2)
-                        # self.jobsHistory.append(last2)
-                        
-                        next_free_thread.append(last2[0])
-                        self.next_free_time[last2[0]] = last2[1]
 
+            finishedConcurrently = True
+            
+            tmpHistory = []
+            while finishedConcurrently:
+                if self.heapSize == 0:
+                    finishedConcurrently = False
+                    break
+
+                last = self.extractMin()
+                print("finished job: {}".format(last))
+                if last != None:
+                    currentFinishedTime = last[1]
+                    if shouldbeAdded:
+                        tmpHistory.append(last)
+                    # if self.nextJobIndex <= len(self.jobs)-1:
+                    #     shouldbeAdded = False
+                    print("jobs remaining: {}, total: {}, remaining: {}".format(self.currentJobs, self.heapSize, self.nextJobIndex))
+                    self.next_free_time[last[0]] = last[1]
+          
+                # print("next job done: {} /// heapSize: {}".format(jobDone, self.heapSize))
+                    next_free_thread.append(last[0])
+                    print("thread {} finished at: {}".format(last[0], last[1]))
+                    print("next one is thread {} which finishes at: {}".format(self.currentJobs[0][0], self.next_free_time[self.currentJobs[0][0]]))
+                    
+                    
+
+                    if last[1] != self.next_free_time[self.currentJobs[0][0]]:
+                        finishedConcurrently = False
                 
-                next_free_thread = sorted(next_free_thread);
-                tmpHistory = sorted(tmpHistory, key=lambda tup: tup[0])
-                print("tmpHistory: {}".format(tmpHistory))
-                self.jobsHistory.extend(tmpHistory)
+                else:
+                    finishedConcurrently = False
+                print("--")   
+            next_free_thread = sorted(next_free_thread);
+            tmpHistory = sorted(tmpHistory, key=lambda tup: tup[0])
+            print("----------------------------")
+            print("tmpHistory: {}".format(tmpHistory))
+            print("----------------------------")
+            self.jobsHistory.extend(tmpHistory)
                 
                 # print("next free time: {}, free threads: {}".format(next_free_time, next_free_thread))
 
-                
-                if len(next_free_thread) > 0:
-                    for i in range(len(next_free_thread)):
-                        if self.nextJobIndex < len(self.jobs)-1:
+            if len(next_free_thread) > 0:
+                for i in range(len(next_free_thread)):
+                    if self.nextJobIndex <= len(self.jobs)-1:
                             
-                            print("Adding job: {}".format((next_free_thread[i], self.jobs[self.nextJobIndex])))
+                        print("Adding job: {}".format((next_free_thread[i], self.jobs[self.nextJobIndex])))
                             
                             
                             # self.jobsHistory.append((next_free_thread[i], self.next_free_time[next_free_thread[i]]))
-                            if (self.jobs[self.nextJobIndex] > 0):
-                                self.insertJob((next_free_thread[i], self.next_free_time[next_free_thread[i]]+ self.jobs[self.nextJobIndex]))
+                        if (self.jobs[self.nextJobIndex] >= 0):
+                            self.next_free_time[next_free_thread[i]] += self.jobs[self.nextJobIndex]
+                            self.insertJob((next_free_thread[i], self.next_free_time[next_free_thread[i]]))
                             self.nextJobIndex += 1
-                            print("jobs remaining after add: {}".format(self.currentJobs))
-                            
-
-                        else:
-                            self.heapSize = 0
-                    next_free_thread = []
-                    jobDone = []
-            print("--------------\n")
-        # for i in range(len(self.jobs)):
-        #   next_worker = 0
-        #   for j in range(self.num_workers):
-        #     if next_free_time[j] < next_free_time[next_worker]:
-        #       next_worker = j
-        #   self.assigned_workers[i] = next_worker
-        #   self.start_times[i] = next_free_time[next_worker]
-        #   next_free_time[next_worker] += self.jobs[i]
+                        print("jobs remaining after add: {}".format(self.currentJobs))
+            
 
 
 
@@ -123,16 +111,16 @@ class JobQueue:
 
         if leftChildIndex < min(self.heapSize, len(self.currentJobs)) and self.currentJobs[leftChildIndex][1] <= self.currentJobs[minIndex][1]:
             if self.currentJobs[leftChildIndex][1] < self.currentJobs[minIndex][1]:
-                inIndex = leftChildIndex
+                minIndex = leftChildIndex
             if self.currentJobs[leftChildIndex][1] == self.currentJobs[minIndex][1] and self.currentJobs[leftChildIndex][0] < self.currentJobs[minIndex][0]:
-                inIndex = leftChildIndex
+                minIndex = leftChildIndex
 
         if rightChildIndex < min(self.heapSize, len(self.currentJobs))  and self.currentJobs[rightChildIndex][1] <= self.currentJobs[minIndex][1]:
             minIndex = rightChildIndex
             if self.currentJobs[leftChildIndex][1] < self.currentJobs[minIndex][1]:
-                inIndex = leftChildIndex
+                minIndex = leftChildIndex
             if self.currentJobs[leftChildIndex][1] == self.currentJobs[minIndex][1] and self.currentJobs[leftChildIndex][0] < self.currentJobs[minIndex][0]:
-                inIndex = leftChildIndex
+                minIndex = leftChildIndex
 
         # print('minIndex: {}'.format(minIndex))
         if i != minIndex and minIndex < min(self.heapSize, len(self.currentJobs)) :
@@ -176,13 +164,43 @@ class JobQueue:
             self.siftDown(i)
 
     def solve(self):
-        self.read_data()
-
-        # self.num_workers = 2
-        # self.heapSize = self.num_workers
-        # # self.jobs = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+        # self.read_data()
+        
+        self.num_workers = 7
         # self.jobs = [1,2,3,4,5]
-        # self.nextJobIndex = self.num_workers
+        # self.jobs = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+        # self.jobs = [5,9,8,4,2,7]
+        # self.jobs = [3,2,3,6,2,8,3,3]
+        # self.jobs = [6, 7, 8]
+        # self.jobs = [3,2,9,5,8,3]
+        # self.jobs = [9,3,7,8,4,4,8,9,9]
+        # self.jobs = [9, 7, 9, 6]
+        # self.jobs = [2,6,4,6,4,3,5,5]
+        # self.jobs = [4,6,5,4,8,4]
+        # self.jobs = [2,3,4]
+        # self.jobs = [4,2,6,8,8,3,9,1,3]
+        # self.jobs = [8,3]
+        # self.jobs = [2,4,7,8,4,6]
+        # self.jobs = [8,2,4,5,4,2,2]
+        # self.jobs = [4,5,4,4,4,1,9,1]
+        # self.jobs = [9]
+        # self.jobs = [7,9,8,1]
+        self.jobs = [1,3,2,9,4,6,2,1,2]
+        # self.jobs = [1 3 2 9 4 6 2 1 2]
+        
+        self.num_workers = min(self.num_workers, len(self.jobs))
+        self.nextJobIndex = self.num_workers
+        self.heapSize = self.num_workers
+
+        for i in range(self.num_workers):
+            self.currentJobs.append((i, self.jobs[i]))
+            self.jobsHistory.append((i, 0))
+            self.next_free_time.append(self.jobs[i])
+        # assert m == len(self.jobs)
+
+
+        
+
         
         
         # for i in range(self.num_workers):
