@@ -8,10 +8,10 @@ class Query:
             self.name = query[2]
 
 def read_queries():
-    # n = int(input())
-    # return [Query(input().split()) for i in range(n)]
+    n = int(input())
+    return [Query(input().split()) for i in range(n)]
 
-    return [Query(query.split(' ')) for query in test_list2]
+    # return [Query(query.split(' ')) for query in test_list2]
 
 def write_responses(result):
     print('\n'.join(result))
@@ -39,30 +39,30 @@ def process_queries(queries):
     return result
 
 if __name__ == '__main__':
-    test_list = [
-        'add 911 police',
-        'add 76213 Mom',
-        'add 17239 Bob',
-        'find 76213',
-        'find 910',
-        'find 911',
-        'del 910',
-        'del 911',
-        'find 911',
-        'find 76213',
-        'add 76213 daddy',
-        'find 76213'
-    ]
+    # test_list = [
+    #     'add 911 police',
+    #     'add 76213 Mom',
+    #     'add 17239 Bob',
+    #     'find 76213',
+    #     'find 910',
+    #     'find 911',
+    #     'del 910',
+    #     'del 911',
+    #     'find 911',
+    #     'find 76213',
+    #     'add 76213 daddy',
+    #     'find 76213'
+    # ]
 
-    test_list2 = [
-        'find 3839442',
-        'add 123456 me',
-        'add 0 granny',
-        'find 0',
-        'find 123456',
-        'del 0',
-        'del 0',
-        'find 0'
-    ]
+    # test_list2 = [
+    #     'find 3839442',
+    #     'add 123456 me',
+    #     'add 0 granny',
+    #     'find 0',
+    #     'find 123456',
+    #     'del 0',
+    #     'del 0',
+    #     'find 0'
+    # ]
     write_responses(process_queries(read_queries()))
 
