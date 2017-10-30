@@ -70,43 +70,43 @@ class QueryProcessor:
                     self.elems_dict[hashValue].remove(query.s)
 
     def process_queries(self):
-        # n = int(input())
-        # for i in range(n):
-        #     self.process_query(self.read_query())
+        n = int(input())
+        for i in range(n):
+            self.process_query(self.read_query())
 
-        for i in range(len(test_list3)):
-            self.process_query(self.read_query2(test_list3[i]))
+        # for i in range(len(test_list3)):
+        #     self.process_query(self.read_query2(test_list3[i]))
 
 if __name__ == '__main__':
     
-    test_list =[
-        'add world',
-        'add HellO',
-        'check 4',
-        'find World',
-        'find world','del world',
-        'check 4',
-        'del HellO',
-        'add luck',
-        'add GooD',
-        'check 2',
-        'del good' 
-    ]
+    # test_list =[
+    #     'add world',
+    #     'add HellO',
+    #     'check 4',
+    #     'find World',
+    #     'find world','del world',
+    #     'check 4',
+    #     'del HellO',
+    #     'add luck',
+    #     'add GooD',
+    #     'check 2',
+    #     'del good' 
+    # ]
 
-    test_list2 = [
-        'add test',
-         'add test',
-         'find test',
-         'del test',
-         'find test',
-         'find Test',
-         'add Test',
-         'find Test' 
-    ]
+    # test_list2 = [
+    #     'add test',
+    #      'add test',
+    #      'find test',
+    #      'del test',
+    #      'find test',
+    #      'find Test',
+    #      'add Test',
+    #      'find Test' 
+    # ]
 
-    test_list3 = [
-        'check 0', 'find help', 'add help', 'add del', 'add add', 'find add', 'find del', 'del del', 'find del', 'check 0', 'check 1', 'check 2' 
-    ]
+    # test_list3 = [
+    #     'check 0', 'find help', 'add help', 'add del', 'add add', 'find add', 'find del', 'del del', 'find del', 'check 0', 'check 1', 'check 2' 
+    # ]
 
     bucket_count = int(input())
     proc = QueryProcessor(bucket_count)
