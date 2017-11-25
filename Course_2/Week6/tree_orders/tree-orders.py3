@@ -12,6 +12,7 @@ class TreeOrders:
         self.key = [0 for i in range(self.n)]
         self.left = [0 for i in range(self.n)]
         self.right = [0 for i in range(self.n)]
+        self.has_been_added = [False for i in range(self.n)]
     
         for i in range(self.n):
             [a, b, c] = map(int, sys.stdin.readline().split())

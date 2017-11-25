@@ -38,10 +38,13 @@ class TreeOrders:
         # Implement correct algorithm here
         if self.n > 1:
           ordered_tree = list(self.inOrder())
-
+        #   print(ordered_tree)
           for i in range(0, self.n-1):
-              if ordered_tree[i + 1] < ordered_tree[i]:
-                    return False            
+              if ordered_tree[i + 1] < ordered_tree[i] :
+                    return False       
+              if ordered_tree[i + 1] == ordered_tree[i]:
+                   if self.key[self.left[self.key.index(ordered_tree[i + 1])]] == ordered_tree[i + 1] and self.left[self.key.index(ordered_tree[i + 1])] != -1:
+                    return False
         return True
 
 def read(self):
